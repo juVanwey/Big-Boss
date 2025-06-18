@@ -1,9 +1,12 @@
 model Boss {
-  id            Int         @id @default(autoincrement())
-  companyName   String
-  siretNumber   String      @unique
-  password      String
-  directorName  String?     // optional
-  employees     Employee[] // relation many to employees
-  computers     Computer[] // relation many to computers
+  id               Int      @id @default(autoincrement())
+  companyName      String
+  siretNumber      String   @unique
+  directorName     String?
+  email            String   @unique
+  password         String
+  resetToken       String?    // <-- Pour le lien unique de réinitialisation
+  resetTokenExpiry DateTime?  // <-- Expiration du token
+  employees        Employee[] // <-- Relation avec les employés
+  computers        Computer[] // <-- Relation avec les ordinateurs
 }

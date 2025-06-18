@@ -8,15 +8,15 @@ exports.getAddComputer = async (req, res) => {
     const availableEmployees = await prisma.employee.findMany({
       where: {
         bossId,
-        computer: null,  // Pas d'ordi associé
+        computer: null, // Pas d'ordi associé
       },
-      orderBy: { lastName: 'asc' },
+      orderBy: { lastName: "asc" },
     });
 
     res.render("pages/addOrUpdateComputer.twig", {
       boss: req.session.boss,
-      availableEmployees,  // on envoie la liste à la vue
-      computer: null       // Pas d'ordi pré-rempli ici
+      availableEmployees, // on envoie la liste à la vue
+      computer: null, // Pas d'ordi pré-rempli ici
     });
   } catch (error) {
     console.error("❌ Erreur chargement formulaire :", error);
@@ -26,35 +26,53 @@ exports.getAddComputer = async (req, res) => {
 
 exports.postAddComputer = async (req, res) => {
   try {
+    const errors = {};
     const bossId = req.session.boss.id;
     const { macAddress, employeeId } = req.body;
 
     const existingComputer = await prisma.computer.findUnique({
-      where: { macAddress }
+      where: { macAddress },
     });
     if (existingComputer) {
       req.session.message = "❌ Cette adresse MAC existe déjà.";
       return res.redirect("/add-computer");
     }
 
+    if (
+      !macAddress ||
+      !/^([0-9A-Fa-f]{2}[:-]?){5}([0-9A-Fa-f]{2})$/.test(macAddress)
+    ) {
+      errors.macAddress =
+        "L'adresse MAC doit contenir 12 caractères hexadécimaux, au format XX:XX:XX:XX:XX:XX.";
+    }
+
+    if (Object.keys(errors).length > 0) {
+      // gérer l'erreur (render ou json)
+      return res.render("pages/addComputer.twig", {
+        error: errors,
+        old: req.body,
+      });
+    }
+
     await prisma.computer.create({
       data: {
         macAddress,
         boss: { connect: { id: bossId } },
-        employee: employeeId ? { connect: { id: parseInt(employeeId) } } : undefined
-      }
+        employee: employeeId
+          ? { connect: { id: parseInt(employeeId) } }
+          : undefined,
+      },
     });
 
     req.session.message = "✅ Ordinateur ajouté avec succès !";
     res.redirect("/");
   } catch (error) {
     console.error("❌ Erreur enregistrement ordinateur :", error);
-    req.session.message = "❌ Une erreur est survenue lors de l'enregistrement.";
+    req.session.message =
+      "❌ Une erreur est survenue lors de l'enregistrement.";
     res.redirect("/add-computer");
   }
 };
-
-    
 
 exports.deleteComputer = async (req, res) => {
   try {
@@ -79,7 +97,7 @@ exports.getUpdateComputer = async (req, res) => {
     // Récupérer l'ordi à modifier
     const computer = await prisma.computer.findUnique({
       where: { id: computerId },
-      include: { employee: true }
+      include: { employee: true },
     });
 
     // Récupérer employés disponibles OU l'employé déjà lié à cet ordinateur (pour ne pas le retirer de la liste)
@@ -89,19 +107,19 @@ exports.getUpdateComputer = async (req, res) => {
         AND: [
           {
             OR: [
-              { computer: null }, 
-              { id: computer.employee?.id }  // Inclure l'employé lié à cet ordi
-            ]
-          }
-        ]
+              { computer: null },
+              { id: computer.employee?.id }, // Inclure l'employé lié à cet ordi
+            ],
+          },
+        ],
       },
-      orderBy: { lastName: 'asc' }
+      orderBy: { lastName: "asc" },
     });
 
     res.render("pages/addOrUpdateComputer.twig", {
       boss: req.session.boss,
       computer,
-      availableEmployees
+      availableEmployees,
     });
   } catch (error) {
     console.error("❌ Erreur récupération ordinateur :", error);
@@ -119,12 +137,12 @@ exports.postUpdateComputer = async (req, res) => {
       macAddress,
       employee: employeeId
         ? { connect: { id: parseInt(employeeId) } }
-        : { disconnect: true }  // Si aucun employé choisi, on délie l'actuel
+        : { disconnect: true }, // Si aucun employé choisi, on délie l'actuel
     };
 
     await prisma.computer.update({
       where: { id: computerId },
-      data: updateData
+      data: updateData,
     });
 
     req.session.message = "Ordinateur modifié avec succès !";
@@ -138,7 +156,7 @@ exports.postUpdateComputer = async (req, res) => {
 
     const computer = await prisma.computer.findUnique({
       where: { id: computerId },
-      include: { employee: true }
+      include: { employee: true },
     });
 
     const availableEmployees = await prisma.employee.findMany({
@@ -146,26 +164,21 @@ exports.postUpdateComputer = async (req, res) => {
         bossId,
         AND: [
           {
-            OR: [
-              { computer: null },
-              { id: computer.employee?.id }
-            ]
-          }
-        ]
+            OR: [{ computer: null }, { id: computer.employee?.id }],
+          },
+        ],
       },
-      orderBy: { lastName: 'asc' }
+      orderBy: { lastName: "asc" },
     });
 
     res.render("pages/addOrUpdateComputer.twig", {
       computer,
       boss: req.session.boss,
       availableEmployees,
-      error: "Impossible de mettre à jour l'ordinateur."
+      error: "Impossible de mettre à jour l'ordinateur.",
     });
   }
 };
-
-
 
 // const { PrismaClient } = require("../../generated/prisma");
 // const prisma = new PrismaClient({});
@@ -177,16 +190,16 @@ exports.postUpdateComputer = async (req, res) => {
 // exports.postAddComputer = async (req, res) => {
 //     try {
 //       console.log("Formulaire reçu >>>", req.body);
-  
+
 //       const existingComputer = await prisma.computer.findUnique({
 //         where: { macAddress: req.body.macAddress },
 //       });
-  
+
 //       if (existingComputer) {
 //         req.session.message = "❌ Cette adresse MAC existe déjà.";
 //         return res.redirect("/add-computer");
 //       }
-  
+
 //       const computer = await prisma.computer.create({
 //         data: {
 //           macAddress: req.body.macAddress,
@@ -195,7 +208,7 @@ exports.postUpdateComputer = async (req, res) => {
 //           },
 //         },
 //       });
-  
+
 //       req.session.message = "✅ Ordinateur ajouté avec succès !";
 //       res.redirect("/");
 //     } catch (error) {
@@ -204,7 +217,6 @@ exports.postUpdateComputer = async (req, res) => {
 //       res.redirect("/add-computer");
 //     }
 //   };
-    
 
 // exports.deleteComputer = async (req, res) => {
 //   try {

@@ -21,6 +21,7 @@ exports.postRegisterBoss = async (req, res) => {
       companyName,
       siretNumber,
       directorName,
+      email,
       password,
       confirmPassword,
     } = req.body;
@@ -35,6 +36,10 @@ exports.postRegisterBoss = async (req, res) => {
     if (!siretNumber || !/^\d{14}$/.test(siretNumber)) {
       errors.siretNumber =
         "Le numéro SIRET doit contenir exactement 14 chiffres.";
+    }
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      errors.email = "Veuillez saisir une adresse email valide.";
     }
 
     if (!password || password.length < 8) {
@@ -57,6 +62,7 @@ exports.postRegisterBoss = async (req, res) => {
         siretNumber,
         directorName: directorName || null,
         password,
+        email,
         // = à ça sans la destructuration :
         // companyName: req.body.companyName,
         // siretNumber: req.body.siretNumber,
@@ -107,3 +113,220 @@ exports.getLogoutBoss = (req, res) => {
     req.session.destroy();
     res.redirect("/login")
 }
+
+// Gérer les mdp oubliés :
+
+const crypto = require("crypto");
+const { sendResetEmail } = require("../services/mailer");
+
+// Affiche le formulaire
+exports.getForgotPassword = (req, res) => {
+  res.render("pages/forgotPassword.twig", {
+    error: null,
+    message: null,
+  });
+};
+
+// Traite l'email envoyé
+
+exports.postForgotPassword = async (req, res) => {
+  const { email } = req.body;
+  const errors = {};
+
+  const boss = await prisma.boss.findUnique({ where: { email } });
+
+  if (!boss) {
+    errors.email = "Aucun compte trouvé avec cette adresse e-mail.";
+    return res.render("pages/forgotPassword.twig", { error: errors, message: null });
+  }
+
+  const token = crypto.randomBytes(32).toString("hex");
+  const expiry = new Date(Date.now() + 60 * 60 * 1000); // 1h
+
+  await prisma.boss.update({
+    where: { email },
+    data: {
+      resetToken: token,
+      resetTokenExpiry: expiry,
+    },
+  });
+
+  const resetUrl = `http://localhost:2020/reset-password?token=${token}`;
+  await sendResetEmail(email, resetUrl); // 👈 Envoi de l'e-mail
+
+  res.render("pages/forgotPassword.twig", {
+    error: null,
+    message: "Un lien de réinitialisation vous a été envoyé par e-mail.",
+  });
+};
+
+// exports.postForgotPassword = async (req, res) => {
+//   const { email } = req.body;
+//   const errors = {};
+
+//   if (!email || !/^[\w.-]+@[\w.-]+\.\w{2,}$/.test(email)) {
+//     errors.email = "Adresse email invalide.";
+//     return res.render("pages/forgotPassword.twig", { error: errors });
+//   }
+
+//   const boss = await prisma.boss.findUnique({ where: { email } });
+
+//   if (!boss) {
+//     errors.email = "Aucun compte associé à cette adresse.";
+//     return res.render("pages/forgotPassword.twig", { error: errors });
+//   }
+
+//   // Génère un token aléatoire
+//   const token = crypto.randomBytes(32).toString("hex");
+//   const expiry = new Date(Date.now() + 3600000); // expire dans 1h
+
+//   await prisma.boss.update({
+//     where: { email },
+//     data: {
+//       resetToken: token,
+//       resetTokenExpiry: expiry,
+//     },
+//   });
+
+//   // À ce stade, on pourrait envoyer un email avec le lien réel
+//   // Mais pour l’instant, on va juste l’afficher sur la page :
+//   const message = `Un lien de réinitialisation a été généré :
+//   http://localhost:2020/reset-password?token=${token}`;
+
+//   res.render("pages/forgotPassword.twig", { message, error: null });
+// };
+
+// GET /reset-password?token=abc123
+exports.getResetPassword = async (req, res) => {
+  const { token } = req.query;
+
+  if (!token) {
+    return res.send("Lien invalide.");
+  }
+
+  const boss = await prisma.boss.findFirst({
+    where: {
+      resetToken: token,
+      resetTokenExpiry: {
+        gte: new Date(), // token non expiré
+      },
+    },
+  });
+
+  if (!boss) {
+    return res.send("Lien invalide ou expiré.");
+  }
+
+  res.render("pages/resetPassword.twig", {
+    token,
+    error: null,
+    message: null,
+  });
+};
+
+// POST /reset-password
+exports.postResetPassword = async (req, res) => {
+  const { token, password, confirmPassword } = req.body;
+  const errors = {};
+
+  if (!password || password.length < 8) {
+    errors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+  }
+
+  if (password !== confirmPassword) {
+    errors.confirmPassword = "Les mots de passe ne correspondent pas.";
+  }
+
+  if (Object.keys(errors).length > 0) {
+    return res.render("pages/resetPassword.twig", {
+      token,
+      error: errors,
+      message: null,
+    });
+  }
+
+  const boss = await prisma.boss.findFirst({
+    where: {
+      resetToken: token,
+      resetTokenExpiry: {
+        gte: new Date(),
+      },
+    },
+  });
+
+  if (!boss) {
+    return res.send("Lien invalide ou expiré.");
+  }
+
+  // Hash du nouveau mot de passe
+  const hashedPassword = await bcrypt.hash(password, 10);
+
+  // Met à jour le mot de passe hashé et supprime le token
+  await prisma.boss.update({
+    where: { id: boss.id },
+    data: {
+      password: hashedPassword,
+      resetToken: null,
+      resetTokenExpiry: null,
+    },
+  });
+
+  res.render("pages/resetPassword.twig", {
+    token: null,
+    error: null,
+    message: "Mot de passe mis à jour avec succès. Vous pouvez maintenant vous connecter.",
+  });
+};
+
+
+// // POST /reset-password
+// exports.postResetPassword = async (req, res) => {
+//   const { token, password, confirmPassword } = req.body;
+//   const errors = {};
+
+//   if (!password || password.length < 8) {
+//     errors.password = "Le mot de passe doit contenir au moins 8 caractères.";
+//   }
+
+//   if (password !== confirmPassword) {
+//     errors.confirmPassword = "Les mots de passe ne correspondent pas.";
+//   }
+
+//   if (Object.keys(errors).length > 0) {
+//     return res.render("pages/resetPassword.twig", {
+//       token,
+//       error: errors,
+//       message: null,
+//     });
+//   }
+
+//   const boss = await prisma.boss.findFirst({
+//     where: {
+//       resetToken: token,
+//       resetTokenExpiry: {
+//         gte: new Date(),
+//       },
+//     },
+//   });
+
+//   if (!boss) {
+//     return res.send("Lien invalide ou expiré.");
+//   }
+
+//   // Met à jour le mot de passe et supprime le token
+//   await prisma.boss.update({
+//     where: { id: boss.id },
+//     data: {
+//       password,
+//       resetToken: null,
+//       resetTokenExpiry: null,
+//     },
+//   });
+
+//   res.render("pages/resetPassword.twig", {
+//     token: null,
+//     error: null,
+//     message: "Mot de passe mis à jour avec succès. Vous pouvez maintenant vous connecter.",
+//   });
+// };
+

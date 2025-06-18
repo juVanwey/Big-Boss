@@ -15,6 +15,7 @@
     "bcrypt": "^6.0.0",
     "express": "^5.1.0",
     "express-session": "^1.18.1",
+    "nodemailer": "^7.0.3",
     "tailwindcss": "^4.1.8",
     "twig": "^1.17.1"
   },
