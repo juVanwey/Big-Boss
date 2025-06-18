@@ -1,0 +1,68 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="./assets/css/registerBoss.css">
+{% endblock %}
+
+{% block title %}
+	<title>Inscription Big Boss</title>
+{% endblock %}
+
+{% block main %}
+	<main>
+
+		<section>
+			<h1>Inscription
+				{{boss.companyName}}</h1>
+			<form action="" method="post">
+				<div>
+					<label for="companyName">Raison sociale</label>
+					<input type="text" id="companyName" name="companyName" value="{{ old.companyName | default('') }}" required>
+					{% if error.companyName %}
+						<p class="error">{{ error.companyName }}</p>
+					{% endif %}
+				</div>
+
+				<div>
+					<label for="siretNumber">Numéro SIRET</label>
+					<input type="text" id="siretNumber" name="siretNumber" value="{{ old.siretNumber | default('') }}" required>
+					{% if error.siretNumber %}
+						<p class="error">{{ error.siretNumber }}</p>
+					{% endif %}
+				</div>
+
+				<div>
+					<label for="directorName">Nom du directeur ou de la directrice (optionnel)</label>
+					<input type="text" id="directorName" name="directorName" value="{{ old.directorName | default('') }}">
+				</div>
+
+				<div>
+					<label for="password">Mot de passe</label>
+					<input type="password" id="password" name="password" required>
+					{% if error.password %}
+						<p class="error">{{ error.password }}</p>
+					{% endif %}
+				</div>
+
+				<div>
+					<label for="confirmPassword">Confirmez votre mot de passe</label>
+					<input type="password" id="confirmPassword" name="confirmPassword">
+					{% if error.confirmPassword %}
+						<p class="error">{{ error.confirmPassword }}</p>
+					{% endif %}
+				</div>
+
+				{% if error.global %}
+					<p class="error">{{ error.global }}</p>
+				{% endif %}
+
+				<button type="submit">S'inscrire</button>
+			</form>
+		</section>
+
+
+		<p>Déjà inscrit ?
+			<a href="/login">Connectez-vous</a>
+		</p>
+	</main>
+{% endblock %}

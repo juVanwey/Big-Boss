@@ -1,0 +1,51 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	{# <link rel="stylesheet" href="./assets/css/addEmployee.css" /> #}
+	<link rel="stylesheet" href="/assets/css/addOrUpdateEmployeeOrComputer.css"/>
+{% endblock %}
+
+{% block title %}
+	<title>Ajouter ou modifier un ordinateur</title>
+{% endblock %}
+
+{% block main %}
+	<main>
+		<section>
+			<a href="/" class="btn-retour">← Retour</a>
+			<h1>
+				{% if computer %}Modifier un ordinateur{% else %}Ajouter un ordinateur
+				{% endif %}
+			</h1>
+			<form action="{% if computer %}/update-computer/{{ computer.id }}{% else %}/add-computer{% endif %}" method="post">
+				<div>
+					<label for="macAddress">Adresse MAC</label>
+					<input type="text" id="macAddress" name="macAddress" value="{{ computer.macAddress | default('') }}" required>
+				</div>
+				<label for="employeeId">Associer à un employé</label>
+				{# <select name="employeeId" id="employeeId">
+									<option value="">-- Aucun --</option>
+									{% for employee in availableEmployees %}
+										<option value="{{ employee.id }}" {% if computer.employeeId == employee.id %} selected {% endif %}>
+											{{ employee.firstName }}
+											{{ employee.lastName }}
+										</option>
+									{% endfor %}
+								</select> #}
+				<select name="employeeId" id="employeeId">
+					<option value="">-- Aucun --</option>
+					{% for employee in availableEmployees %}
+						<option value="{{ employee.id }}" {% if computer and computer.employee and computer.employee.id == employee.id %} selected {% endif %}>
+							{{ employee.firstName }}
+							{{ employee.lastName }}
+						</option>
+					{% endfor %}
+				</select>
+				<button type="submit">
+					{% if computer %}Modifier{% else %}Ajouter
+					{% endif %}
+				</button>
+			</form>
+		</section>
+	</main>
+{% endblock %}

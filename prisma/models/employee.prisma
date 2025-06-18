@@ -1,0 +1,28 @@
+// model Employee {
+//   id          Int       @id @default(autoincrement())
+//   firstName   String
+//   lastName    String
+//   email       String    @unique
+//   password    String
+//   age         Int?
+//   gender      String?
+//   bossId      Int
+//   boss        Boss      @relation(fields: [bossId], references: [id])
+
+//     // Relation 1:1 optionnelle vers Computer
+//   computer    Computer? 
+// }
+
+model Employee {
+  id         Int        @id @default(autoincrement())
+  firstName  String
+  lastName   String
+  email      String     @unique
+  password   String
+  age        Int?
+  gender     String?
+  bossId     Int
+  boss       Boss       @relation(fields: [bossId], references: [id])
+
+  computer   Computer?  @relation() // relation inverse — pas de fields/references ici
+}

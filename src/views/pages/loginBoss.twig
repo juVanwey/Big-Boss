@@ -1,0 +1,33 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+    <link rel="stylesheet" href="./assets/css/loginBoss.css" />
+{% endblock %}
+
+{% block title %}
+    <title>Connexion Big Boss</title>
+{% endblock %}
+
+{% block main %}
+    <main>
+        <section>
+            <h1>Formulaire de connexion</h1>
+            <form method="post">
+                <div>
+                    <label for="siretNumber">Numéro SIRET</label>
+                    <input type="siretNumber" name="siretNumber" id="siretNumber" />
+                    <p class="error">{{ error.siretNumber }}</p>
+                </div>
+                <div>
+                    <label for="password">Mot de passe</label>
+                    <input type="password" name="password" id="password" />
+                    <p class="error">{{ error.password }}</p>
+                </div>
+                <button>Se connecter</button>
+            </form>
+        </section>
+        		<p>Pas encore inscrit ?
+			<a href="/register">Inscrivez-vous</a>
+		</p>
+    </main>
+{% endblock %}

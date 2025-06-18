@@ -1,0 +1,164 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  
+  body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  main {
+    flex: 1;
+    padding: 1rem;
+  }
+
+  h1 {
+    color: #333;
+    margin-bottom: 2rem;
+    text-align: center;
+    font-size: 2rem;
+    font-weight: 600;
+  }
+
+  h2 {
+    color: #333;
+    margin-bottom: 2rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+  
+  #welcome {
+    background-color: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    /* Plus large */
+    width: 90%;
+    max-width: 1000px;
+    /* Centrer horizontalement */
+    margin: 2rem auto;
+    margin-bottom: 3rem;
+    padding: 2rem;
+  }
+
+  .addEmployee-a, .addComputer-a {
+    display: block;
+    margin-bottom: 2rem;
+  }
+  .addEmployee-a:hover, .addComputer-a:hover {
+    text-decoration: underline;
+  }
+
+  #employeesList, #computersList {
+    margin-top: 2rem;
+  }
+  
+  #employeesList table, #computersList table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    overflow: hidden;
+    background-color: #fff;
+  }
+  
+  #employeesList th,
+  #employeesList td,
+  #computersList th,
+  #computersList td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid #e0e0e0;
+  }
+  
+  #employeesList th,
+  #computersList th {
+    background-color: #f0f4ff;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  #employeesList tr:hover, #computersList tr:hover {
+    background-color: #f9f9f9;
+  }
+  
+  #employeesList a, #computersList a {
+    margin-right: 0.8rem;
+    text-decoration: none;
+    color: #4a6cfa;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+  
+  #employeesList a:hover, #computersList a:hover {
+    color: #2c45c7;
+  }
+   
+  /* Header styles */
+  header {
+    background-color: white;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    padding: 1rem;
+  }
+  
+  header nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1rem;
+    justify-content: flex-end;
+  }
+  
+  header nav a {
+    text-decoration: none;
+    color: #555;
+    font-weight: 500;
+    transition: color 0.3s;
+  }
+  
+  header nav a:hover {
+    color: #4a6cfa;
+  }
+  
+  /* Footer styles */
+  footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 1rem;
+  
+  }
+
+  .alert.success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  .alert.error {
+    background-color: #f8d7da;
+    color: #721c24;
+  }
+  
+  .error {
+    color: #d93025;
+    font-size: 0.9rem;
+    margin: 0.3rem 0 0;
+  }
+
+  .alert {
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 5px;
+  }
+  
+  .success {
+    background-color: #d4edda;
+    color: #155724;
+  }
+  
+  
+  /* Responsive adjustments à compléter */

@@ -1,0 +1,9 @@
+model Boss {
+  id            Int         @id @default(autoincrement())
+  companyName   String
+  siretNumber   String      @unique
+  password      String
+  directorName  String?     // optional
+  employees     Employee[] // relation many to employees
+  computers     Computer[] // relation many to computers
+}

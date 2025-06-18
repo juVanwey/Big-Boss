@@ -1,0 +1,53 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+    {# <link rel="stylesheet" href="./assets/css/addEmployee.css" /> #}
+    <link rel="stylesheet" href="/assets/css/addOrUpdateEmployeeOrComputer.css" />
+{% endblock %}
+
+{% block title %}
+    <title>Ajouter ou modifier un employé</title>
+{% endblock %}
+
+{% block main %}
+    <main>
+        <section>
+        <a href="/" class="btn-retour">← Retour</a>
+            <h1>{% if employee %}Modifier un employé{% else %}Ajouter un employé{% endif %}</h1>
+            <form action="{% if employee %}/update-employee/{{ employee.id }}{% else %}/add-employee{% endif %}" method="post">
+                <div>
+                    <label for="firstName">Prénom</label>
+                    <input type="text" id="firstName" name="firstName" value="{{ employee.firstName | default('') }}" required>
+                </div>
+                <div>
+                    <label for="lastName">Nom</label>
+                    <input type="text" id="lastName" name="lastName" value="{{ employee.lastName | default('') }}" required>
+                </div>
+                                <div>
+                    <label for="gender">Genre</label>
+                    <select id="gender" name="gender">
+                        <option value="" {% if employee.gender is empty %}selected{% endif %}>-- Sélectionnez --</option>
+                        <option value="male" {% if employee.gender == 'male' %}selected{% endif %}>Homme</option>
+                        <option value="female" {% if employee.gender == 'female' %}selected{% endif %}>Femme</option>
+                        <option value="other" {% if employee.gender == 'other' %}selected{% endif %}>Autre</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="age">Âge</label>
+                    <input type="number" id="age" name="age" value="{{ employee.age | default('') }}" min="0">
+                </div>
+                <div>
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="email" value="{{ employee.email | default('') }}" required>
+                </div>
+                <div>
+                    <label for="password">{% if employee %}Nouveau mot de passe{% else %}Mot de passe{% endif %}</label>
+                    <input type="password" id="password" name="password" {% if not employee %}required{% endif %}>
+                </div>
+
+                <button type="submit">{% if employee %}Modifier{% else %}Ajouter{% endif %}</button>
+            </form>
+        </section>
+    </main>
+{% endblock %}
+

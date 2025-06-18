@@ -1,0 +1,114 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="./assets/css/homeBoss.css"/>
+{% endblock %}
+
+{% block title %}
+	<title>Accueil</title>
+{% endblock %}
+
+{% set genderLabels = {
+  'male': 'Homme',
+  'female': 'Femme',
+  'other': 'Autre'
+} %}
+
+
+{% block main %}
+	<main>
+		<section id="welcome">
+			<h1>Bienvenue
+				{{ boss.companyName }}</h1>
+
+			<p>Vous êtes maintenant connecté !</p>
+			<p>Numéro SIRET :
+				{{ boss.siretNumber }}</p>
+		</section>
+
+		{% if message %}
+					<div class="alert success">{{ message }}</div>
+					<script>
+						setTimeout(() => {
+		const alert = document.querySelector('.alert');
+		if (alert) 
+		alert.remove();
+		
+		}, 4000); // 4 secondes
+					</script>
+				{% endif %}
+		{# {% if message %}
+			<div class="alert {{ messageType }}">{{ message }}</div>
+			<script>
+				setTimeout(() => {
+const alert = document.querySelector('.alert');
+if (alert) 
+alert.remove();
+
+}, 60000);
+			</script>
+		{% endif %} #}
+
+
+		<section id="employeesList">
+			<h2>Vos employés</h2>
+			<a class="addEmployee-a" href="/add-employee">Ajouter un employé</a>
+			<table>
+				<tr>
+					<th>Prénom</th>
+					<th>Nom</th>
+					<th>Genre</th>
+					<th>Âge</th>
+					<th>Email</th>
+					<th>Actions</th>
+				</tr>
+				{% for employee in employees %}
+					<tr>
+						<td>{{ employee.firstName }}</td>
+						<td>{{ employee.lastName }}</td>
+						<td>{{ genderLabels[employee.gender] }}</td>
+						<td>{{ employee.age }}</td>
+						<td>{{ employee.email }}</td>
+						<td>
+							<a href="/update-employee/{{ employee.id }}">Modifier</a>
+							<a href="/delete-employee/{{ employee.id }}" onclick="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet employé ?');">Supprimer</a>
+
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</section>
+
+
+		<section id="computersList">
+			<h2>Vos ordinateurs</h2>
+			<a class="addComputer-a" href="/add-computer">Ajouter un ordinateur</a>
+			<table>
+				<tr>
+					<th>Adresse MAC</th>
+					<th>Employé assigné</th>
+					<th>Actions</th>
+				</tr>
+				{% for computer in computers %}
+					<tr>
+						<td>{{ computer.macAddress }}</td>
+						<td>
+							{% if computer.employee %}
+								{{ computer.employee.firstName }}
+								{{ computer.employee.lastName }}
+							{% else %}
+								Aucun
+							{% endif %}
+						</td>
+						<td>
+							<a href="/update-computer/{{ computer.id }}">Modifier</a>
+							<a href="/delete-computer/{{ computer.id }}" onclick="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet ordinateur ?');">Supprimer</a>
+
+						</td>
+					</tr>
+				{% endfor %}
+			</table>
+		</section>
+
+	</main>
+{% endblock %}
