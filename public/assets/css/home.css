@@ -47,7 +47,8 @@ h2 {
 }
 
 #employeesList,
-#computersList {
+#computersList,
+#employeeInfos {
   margin-top: 2rem;
 }
 
@@ -66,7 +67,8 @@ h2 {
 }
 
 #employeesList table,
-#computersList table {
+#computersList table,
+#employeeInfos table {
   width: 100%;
   border-collapse: collapse;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -78,26 +80,31 @@ h2 {
 #employeesList th,
 #employeesList td,
 #computersList th,
-#computersList td {
+#computersList td,
+#employeeInfos th,
+#employeeInfos td {
   padding: 1rem;
   text-align: left;
   border-bottom: 1px solid #e0e0e0;
 }
 
 #employeesList th,
-#computersList th {
+#computersList th,
+#employeeInfos th {
   background-color: #f0f4ff;
   font-weight: 600;
   color: #333;
 }
 
 #employeesList tr:hover,
-#computersList tr:hover {
+#computersList tr:hover,
+#employeeInfos tr:hover {
   background-color: #f9f9f9;
 }
 
 #employeesList a,
-#computersList a {
+#computersList a,
+#employeeInfos a {
   color: #4a6cfa;
   text-decoration: none;
   font-size: 0.9rem;
@@ -108,20 +115,37 @@ h2 {
 }
 
 #employeesList a:hover,
-#computersList a:hover {
+#computersList a:hover,
+#employeeInfos a:hover {
   color: #2c45c7;
 }
 
 .error {
-  color: #d93025;
+  /* color: #d93025;
+  font-size: 0.9rem;
+  margin: 0.3rem 0 0; */
+  background-color: #d93025;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
   font-size: 0.9rem;
   margin: 0.3rem 0 0;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
 .success {
-  color: #155724;
+  /* color: #155724;
+  font-size: 0.9rem;
+  margin: 0.3rem 0 0; */
+  background-color: green;
+  color: white;
+  padding: 0.5rem;
+  border-radius: 6px;
   font-size: 0.9rem;
   margin: 0.3rem 0 0;
+  text-align: center;
+  transition: background-color 0.3s;
 }
 
 /* Header styles */
@@ -129,6 +153,24 @@ header {
   background-color: white;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
   padding: 1rem;
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo_slogan {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+
+.logo_slogan img {
+  height: 60px;
+  object-fit: contain;
 }
 
 header nav ul {
@@ -156,14 +198,14 @@ header nav a.logout {
 
 header nav a.logout:hover {
   color: red;
-}
+}  
 
 /* Footer styles */
 footer {
-  background-color: #333;
-  color: white;
-  text-align: center;
-  padding: 1rem;
+background-color: #333;
+color: white;
+text-align: center;
+padding: 1rem;
 }
 
 /* Responsive adjustments à compléter */

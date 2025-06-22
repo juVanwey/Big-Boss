@@ -10,7 +10,7 @@ exports.getRegisterBoss = async (req, res) => {
   // const bosses = await prisma.boss.findMany();
   // console.log(bosses);
   // res.render("pages/registerBoss.twig", { boss: bosses[0] });
-  res.render("pages/registerBoss.twig", { boss: req.session.boss }); // on passe la session du boss pour afficher le bon header
+  res.render("pages/registerBoss.twig", { boss: req.session.boss, currentUrl: req.originalUrl }); // on passe la session du boss pour afficher le bon header
 };
 
 // post : pour traiter les données du formulaire d'enregistrement du boss
@@ -75,14 +75,18 @@ exports.postRegisterBoss = async (req, res) => {
     // ici error === errors, c’est-à-dire l’objet d’erreurs envoyé dans le throw
     res.render("pages/registerBoss.twig", {
       error,
-      old: req.body, // pour préremplir le formulaire
-      boss: req.session.boss, // utile pour afficher le bon header
-    });
+      old: req.body,
+      boss: req.session.boss,
+      currentUrl: req.originalUrl
+    });    
   }
 };
 
 exports.getLoginBoss = async (req, res) => {
-  res.render("pages/loginBoss.twig", { boss: req.session.boss }); // on passe la session du boss pour afficher le bon header
+  res.render("pages/loginBoss.twig", {
+    boss: req.session.boss,
+    currentUrl: req.originalUrl
+  });
 };
 
 exports.postLoginBoss = async (req, res) => {
@@ -102,22 +106,24 @@ exports.postLoginBoss = async (req, res) => {
         else throw {siretNumber: "Numéro SIRET incorrect"}
     }
     catch (error) {
-        res.render("pages/loginBoss.twig", {
-            error,
-            boss: req.session.boss // utile pour afficher le bon header
-        });
+      res.render("pages/loginBoss.twig", {
+        error,
+        boss: req.session.boss,
+        currentUrl: req.originalUrl
+      });      
     }    
 }
 
 exports.getLogoutBoss = (req, res) => {
     req.session.destroy();
-    res.redirect("/login")
+    res.redirect("/welcome")
 }
 
 // Gérer les mdp oubliés :
 
 const crypto = require("crypto");
-const { sendResetEmail } = require("../services/mailer");
+const { sendResetEmail, sendConfirmationEmail } = require("../services/mailer");
+
 
 // Affiche le formulaire
 exports.getForgotPassword = (req, res) => {
@@ -270,6 +276,9 @@ exports.postResetPassword = async (req, res) => {
       resetTokenExpiry: null,
     },
   });
+
+  // Envoi d'un e-mail de confirmation
+  await sendConfirmationEmail(boss.email);
 
   res.render("pages/resetPassword.twig", {
     token: null,

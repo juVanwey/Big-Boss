@@ -1,0 +1,80 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="/assets/css/home.css"/>
+{% endblock %}
+
+{% block title %}
+	<title>Accueil Employé</title>
+{% endblock %}
+
+{% block main %}
+	<main>
+		<section id="welcome">
+			<h1>
+				Bienvenue
+				{{ employee.firstName }}
+				{{ employee.lastName }}
+			</h1>
+			{# <p>Vous êtes maintenant connecté !</p> #}
+			<p>Email :
+				{{ employee.email }}</p>
+		</section>
+
+		<section id="employeeInfos">
+			{% if message %}
+				<div class="alert success">{{ message }}</div>
+				<script>
+					setTimeout(() => {
+const alert = document.querySelector('.alert');
+if (alert) 
+alert.remove();
+
+}, 4000); // 4 secondes
+				</script>
+			{% endif %}
+			{# 
+			    <h2>Vos informations</h2>
+			    <p>Prénom : {{ employee.firstName }}</p>
+			    <p>Nom : {{ employee.lastName }}</p>
+			    <p>Genre : {{ employee.gender }}</p>
+			    <p>Âge : {{ employee.age }}</p>
+			
+			    {% if employee.computer %}
+			      <p>Adresse MAC associée : {{ employee.computer.macAddress }}</p>
+			    {% else %}
+			      <p>Aucun ordinateur associé pour le moment.</p>
+			    {% endif %}
+			    #}
+			<h2>Vos informations</h2>
+			<table>
+				<tr>
+					<th>Prénom</th>
+					<th>Nom</th>
+					<th>Genre</th>
+					<th>Âge</th>
+					<th>Email</th>
+					<th>Adresse MAC associée</th>
+					<th>Actions</th>
+				</tr>
+				<tr>
+					<td>{{ employee.firstName }}</td>
+					<td>{{ employee.lastName }}</td>
+					<td>{{ genderLabels[employee.gender] }}</td>
+					<td>{{ employee.age }}</td>
+					<td>{{ employee.email }}</td>
+					<td>
+						{% if employee.computer %}
+							{{ employee.computer.macAddress }}
+						{% else %}
+							Aucun ordinateur associé
+						{% endif %}
+					</td>
+					<td>
+						<a href="/update-employee/{{ employee.id }}">Modifier</a>
+					</td>
+				</tr>
+			</table>
+		</section>
+	</main>
+{% endblock %}

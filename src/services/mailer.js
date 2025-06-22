@@ -26,4 +26,22 @@ async function sendResetEmail(to, resetUrl) {
   });
 }
 
-module.exports = { sendResetEmail };
+async function sendConfirmationEmail(to) {
+  await transporter.sendMail({
+    from: '"Big Boss" <no-reply@bigboss.com>',
+    to,
+    subject: "Mot de passe réinitialisé",
+    html: `
+      <p>Bonjour,</p>
+      <p>Votre mot de passe a été réinitialisé avec succès.</p>
+      <p>Si vous n'êtes pas à l'origine de cette demande, veuillez nous contacter immédiatement.</p>
+      <p>L’équipe Big Boss</p>
+    `,
+  });
+}
+
+
+module.exports = {
+  sendResetEmail,
+  sendConfirmationEmail,
+};

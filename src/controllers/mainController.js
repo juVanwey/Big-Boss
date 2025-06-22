@@ -1,6 +1,10 @@
 const { PrismaClient } = require("../../generated/prisma");
 const prisma = new PrismaClient();
 
+exports.getWelcomePage = (req, res) => {
+  res.render("pages/welcome"); // twig lira welcome.twig dans ton dossier templates/views
+};
+
 exports.getHomeBoss = async (req, res) => {
   try {
     // const boss = await prisma.boss.findUnique({
@@ -31,7 +35,7 @@ exports.getHomeBoss = async (req, res) => {
     const message = req.session.message;
     delete req.session.message; // on l'efface juste après l’avoir lu
 
-    res.render("pages/homeBoss.twig", {
+    res.render("pages/bossHome.twig", {
       boss: req.session.boss, // on passe le boss à la vue
       employees: boss.employees, // on passe les employés à la vue
       computers: boss.computers, // on passe les ordinateurs à la vue
@@ -39,7 +43,7 @@ exports.getHomeBoss = async (req, res) => {
     });
 
   } catch (error) {
-    res.render("pages/homeBoss.twig", {
+    res.render("pages/bossHome.twig", {
       boss: req.session.boss,
       error: "Une erreur est survenue lors du chargement des employés.",
     });

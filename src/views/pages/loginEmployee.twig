@@ -1,0 +1,38 @@
+{% extends "../layouts/base.twig" %}
+
+{% block style %}
+	<link rel="stylesheet" href="./assets/css/auth.css"/>
+{% endblock %}
+
+{% block title %}
+	<title>Connexion Employé</title>
+{% endblock %}
+
+{% block main %}
+	<main>
+		<section>
+			<h1>Formulaire de connexion Employé(e)</h1>
+			<form method="post">
+				<div>
+					<label for="email">Email</label>
+					<input type="email" name="email" id="email" required>
+					{% if error.email is defined and error.email %}
+      <p class="error">{{ error.email }}</p>
+    {% endif %}
+				</div>
+				<div>
+					<label for="password">Mot de passe</label>
+					<input type="password" name="password" id="password" required>
+					    {% if error.password is defined and error.password %}
+      <p class="error">{{ error.password }}</p>
+    {% endif %}
+				</div>
+				<button>Se connecter</button>
+			</form>
+		</section>
+		<p>
+			Mot de passe oublié ?
+			<a href="/forgot-password">Cliquez-ici</a>
+		</p>
+	</main>
+{% endblock %}

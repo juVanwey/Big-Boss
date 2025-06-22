@@ -1,0 +1,21 @@
+{% extends 'layouts/base.twig' %}
+
+{% block style %}
+	<link rel="stylesheet" href="./assets/css/welcome.css"/>
+{% endblock %}
+
+{% block main %}
+<main>
+<section class="welcome-container">
+  <h1>Bienvenue chez</h1>
+  <div class="logo">
+    <img src="./assets/images/logo.png" alt="Logo de Big Boss">
+  </div>
+  <p>Big Boss, Best employees 🏆</p>
+  <div class="btn-group">
+    <a href="/login" class="btn btn-employer">Je suis employeur</a>
+    <a href="/login-employee" class="btn btn-employee">Je suis employé(e)</a>
+  </div>
+</section>
+</main>
+{% endblock %}

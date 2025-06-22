@@ -7,6 +7,8 @@ const session = require('express-session');
 
 const app = express();
 app.set('views', './src/views');
+app.set('view engine', 'twig'); // utiliser Twig comme moteur de template. Ajouté car erreur : "No default engine was specified and no extension was provided."
+
 app.use(express.static("./public"));
 app.use(express.urlencoded({ extended: true })); // rendre form accessible dans le controller
 app.use(session({

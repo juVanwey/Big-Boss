@@ -5,32 +5,38 @@
 {% endblock %}
 
 {% block title %}
-	<title>Connexion Big Boss</title>
+	<title>Connexion Boss</title>
 {% endblock %}
 
 {% block main %}
 	<main>
 		<section>
-			<h1>Formulaire de connexion</h1>
+			<h1>Formulaire de connexion Employeur</h1>
 			<form method="post">
 				<div>
 					<label for="siretNumber">Numéro SIRET</label>
 					<input type="siretNumber" name="siretNumber" id="siretNumber"/>
-					<p class="error">{{ error.siretNumber }}</p>
+					    {% if error.siretNumber is defined and error.siretNumber %}
+      <p class="error">{{ error.siretNumber }}</p>
+    {% endif %}
 				</div>
 				<div>
 					<label for="password">Mot de passe</label>
 					<input type="password" name="password" id="password"/>
-					<p class="error">{{ error.password }}</p>
+					{% if error.password is defined and error.password %}
+      <p class="error">{{ error.password }}</p>
+    {% endif %}
 				</div>
 				<button>Se connecter</button>
 			</form>
 		</section>
-		<p> Mot de passe oublié ?
+		<p class="forgottenPassword"> Mot de passe oublié ?
 			<a href="/forgot-password">Cliquez-ici</a>
 		</p>
-		<p>Pas encore inscrit ?
+		<section>
+		<h2>Pas encore inscrit ? </h2>
 			<a href="/register">Inscrivez-vous</a>
-		</p>
+		
+		</section>
 	</main>
 {% endblock %}

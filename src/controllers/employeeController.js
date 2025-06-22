@@ -98,3 +98,58 @@ exports.postUpdateEmployee = async (req, res) => {
     });
   }
 };
+
+// Ajout de la consigne suivante :
+// Un utilisateur peut se connecter (pas s’inscrire) à l’aide des identifiants renseignés par le chef d’entreprise (mail, mot de passe). Il aura alors accès, sur sa page d’accueil, à ses informations personnelles et à l’adresse MAC de l’ordinateur auquel il est associé.
+
+// GET /login-employee
+exports.getLoginEmployee = (req, res) => {
+  res.render("pages/loginEmployee.twig", {
+    error: null,
+    currentUrl: req.originalUrl,
+  });
+};
+
+// POST /login-employee
+exports.postLoginEmployee = async (req, res) => {
+  const { email, password } = req.body;
+  const errors = {};
+
+  const employee = await prisma.employee.findUnique({ where: { email } });
+
+  if (!employee) {
+    errors.email = "Adresse email inconnue";
+    return res.render("pages/loginEmployee.twig", { error: errors }, { currentUrl: req.originalUrl });
+  }
+
+  const ok = await bcrypt.compare(password, employee.password);
+  if (!ok) {
+    errors.password = "Mot de passe incorrect";
+    return res.render("pages/loginEmployee.twig", { error: errors }, { currentUrl: req.originalUrl });
+  }
+
+  // ✅ login réussi
+  req.session.employee = employee;     // on stocke l'employé
+  res.redirect("/employee-home");
+};
+
+// GET /employee-home
+exports.getEmployeeHome = async (req, res) => {
+  // on récupère l'employé en session
+  const employeeId = req.session.employee.id;
+
+  // inclure l'ordi associé
+  const employee = await prisma.employee.findUnique({
+    where: { id: employeeId },
+    include: { computer: true }, // computer contient la MAC
+  });
+
+  res.render("pages/employeeHome.twig", { employee });
+};
+
+// Déconnexion employé
+
+exports.getLogoutEmployee = (req, res) => {
+  req.session.destroy();
+  res.redirect("/welcome")
+}
