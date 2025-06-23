@@ -16,3 +16,4 @@ router.post("/reset-password", bossController.postResetPassword); // Route pour 
 
 module.exports = router;
 // Exportation du routeur pour l'utiliser dans app.js
+

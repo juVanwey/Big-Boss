@@ -19,65 +19,138 @@
 	<main>
 		<section id="welcome">
 			<h1>Bienvenue
-				{{ boss.companyName }}</h1>
+				{{ boss.directorName ?? boss.companyName }}
+			</h1>
 
-			<p>Vous êtes maintenant connecté !</p>
 			<p>Numéro SIRET :
-				{{ boss.siretNumber }}</p>
+				{{ boss.siretNumber }}
+			</p>
 		</section>
 
+
 		{% if message %}
-					<div class="alert success">{{ message }}</div>
-					<script>
-						setTimeout(() => {
-		const alert = document.querySelector('.alert');
-		if (alert) 
-		alert.remove();
-		
-		}, 4000); // 4 secondes
-					</script>
-				{% endif %}
-				
-		{# {% if message %}
-			<div class="alert {{ messageType }}">{{ message }}</div>
+			<div class="alert success">{{ message }}</div>
 			<script>
 				setTimeout(() => {
 const alert = document.querySelector('.alert');
 if (alert) 
 alert.remove();
 
-}, 60000);
+
+
+}, 4000); // 4 secondes
 			</script>
-		{% endif %} #}
+		{% endif %}
+
+		{# {% if message %}
+															<div class="alert {{ messageType }}">{{ message }}</div>
+															<script>
+																setTimeout(() => {
+												const alert = document.querySelector('.alert');
+												if (alert) 
+												alert.remove();
+												
+												}, 60000);
+															</script>
+														{% endif %} #}
 
 
-		<section id="employeesList">
-			<h2>Vos employés</h2>
+		{# <section id="employeesList">
+													<h2>Vos employés</h2>
+													<a class="addEmployee-a" href="/add-employee">Ajouter un employé</a>
+													<table>
+														<tr>
+															<th>Prénom</th>
+															<th>Nom</th>
+															<th>Genre</th>
+															<th>Âge</th>
+															<th>Email</th>
+															<th>Actions</th>
+														</tr>
+														{% for employee in employees %}
+															<tr>
+																<td>{{ employee.firstName }}</td>
+																<td>{{ employee.lastName }}</td>
+																<td>{{ genderLabels[employee.gender] }}</td>
+																<td>{{ employee.age }}</td>
+																<td>{{ employee.email }}</td>
+																<td>
+																	<a href="/update-employee/{{ employee.id }}">Modifier</a>
+																	<a href="/delete-employee/{{ employee.id }}" onclick="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet employé ?');">Supprimer</a>
+										
+																</td>
+															</tr>
+														{% endfor %}
+													</table>
+												</section> #}
+
+		<section
+							id="dashboard">
+							<div class="dashboard-cards">
+								<div class="dashboard-card alert-conge">
+									<h3>{{ pendingLeavesCount }}X</h3>
+									<p>demande(s) de congés en attente</p>
+									<a href="/leaves">Voir</a>
+								</div>
+				
+								<div class="dashboard-card alert-panne">
+									<h3>{{ brokenComputersCount }}X</h3>
+									<p>ordinateur(s) signalé(s) en panne</p>
+									<a href="/computers?filter=broken">Voir</a>
+								</div>
+								<div class="dashboard-card alert-paie">
+								<h3>J-{{ daysBeforePayroll }}X</h3>
+								<p>avant l’émission de la paie</p>
+								<a href="/payroll">Préparer la paie</a>
+							</div>
+				
+							<div class="dashboard-card alert-entretien">
+								<h3>{{ pendingReviewsCount }}X</h3>
+								<p>entretien(s) annuel(s) à planifier</p>
+								<a href="/reviews">Voir</a>
+							</div>
+				
+							<div class="dashboard-card alert-formation">
+								<h3>{{ upcomingTrainingsCount }}X</h3>
+								<p>formation(s) à venir cette semaine</p>
+								<a href="/trainings">Voir</a>
+							</div>
+				
+							<div class="dashboard-card alert-contrat">
+								<h3>{{ expiringContractsCount }}X</h3>
+								<p>contrat(s) arrivant à échéance</p>
+								<a href="/contracts">Voir</a>
+							</div>
+							</div>
+						</section>
+
+
+			<section id="employeesList"> <h2>Vos employés</h2>
 			<a class="addEmployee-a" href="/add-employee">Ajouter un employé</a>
-			<table>
-				<tr>
-					<th>Prénom</th>
-					<th>Nom</th>
-					<th>Genre</th>
-					<th>Âge</th>
-					<th>Email</th>
-					<th>Actions</th>
-				</tr>
+
+			<div class="employee-cards">
 				{% for employee in employees %}
-					<tr>
-						<td>{{ employee.firstName }}</td>
-						<td>{{ employee.lastName }}</td>
-						<td>{{ genderLabels[employee.gender] }}</td>
-						<td>{{ employee.age }}</td>
-						<td>{{ employee.email }}</td>
-						<td>
+					<div class="employee-card">
+						<h3>{{ employee.firstName }}
+							{{ employee.lastName }}</h3>
+						<p>
+							<strong>Genre :</strong>
+							{{ genderLabels[employee.gender] }}</p>
+						<p>
+							<strong>Âge :</strong>
+							{{ employee.age }}</p>
+						<p>
+							<strong>Email :</strong>
+							{{ employee.email }}</p>
+						<div class="card-actions">
 							<a href="/update-employee/{{ employee.id }}">Modifier</a>
 							<a href="/delete-employee/{{ employee.id }}" onclick="return confirm('Êtes-vous sûr(e) de vouloir supprimer cet employé ?');">Supprimer</a>
-
-						</td>
-					</tr>
+						</div>
+					</div>
+				{% else %}
+					<p>Aucun employé pour le moment.</p>
 				{% endfor %}
-			</table>
+			</div>
 		</section>
 
 

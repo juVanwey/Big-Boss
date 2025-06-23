@@ -2,7 +2,7 @@
   <div class="header-container">
     <div class="logo_slogan">
       <a href="/welcome">
-        <img src="./assets/images/logo.png" alt="Logo Big Boss" />
+        <img src="/assets/images/logo.png" alt="Logo Big Boss" />
       </a>
 	  {# <p>Big Boss, Best employees 🏆</p> #}
     </div>
@@ -19,28 +19,31 @@
         {% else %}
           {% if currentUrl == '/login' %}
             <li>
-              <a href="/register">Inscription Employeur</a>
+              <a class="btn-boss-nav" href="/register">Inscription Employeur</a>
             </li>
             <li>
-              <a class="a_employee" href="/login-employee">Connexion Employé(e)</a>
+              <a class="btn-employee-nav" href="/login-employee">Connexion Employé(e)</a>
             </li>
           {% elseif currentUrl == '/login-employee' %}
             <li>
-              <a href="/login">Connexion Employeur</a>
+              <a class="btn-boss-nav" href="/login">Connexion Employeur</a>
             </li>
           {% elseif currentUrl =='/register' %}
             <li>
-              <a href="/login">Connexion Employeur</a>
+              <a class="btn-boss-nav" href="/login">Connexion Employeur</a>
             </li>
             <li>
-              <a href="/login-employee">Connexion Employé(e)</a>
+              <a class="btn-employee-nav" href="/login-employee">Connexion Employé(e)</a>
             </li>
           {% else %}
-            <li>
-              <a href="/login">Connexion Employeur</a>
+          <li>
+              <a class="btn-boss-nav" href="/login">Inscription Employeur</a>
             </li>
             <li>
-              <a href="/login-employee">Connexion Employé(e)</a>
+              <a class="btn-boss-nav" href="/login">Connexion Employeur</a>
+            </li>
+            <li>
+              <a class="btn-employee-nav" href="/login-employee">Connexion Employé(e)</a>
             </li>
           {% endif %}
         {% endif %}

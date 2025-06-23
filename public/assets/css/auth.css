@@ -198,7 +198,41 @@ header nav a.logout {
 
 header nav a.logout:hover {
   color: red;
-}  
+}
+
+/* Style bouton violet pour employeur */
+.btn-boss-nav {
+  background-color: #6366f1;
+  color: white !important;
+  /* font-weight: bold; */
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-boss-nav:hover {
+  background-color: #4f46e5;
+}
+
+/* Style bouton vert pour employé */
+.btn-employee-nav {
+  background-color: #22c55e;
+  color: white !important;
+  /* font-weight: bold; */
+  border: none;
+  padding: 0.4rem 0.8rem;
+  border-radius: 6px;
+  transition: background-color 0.3s;
+  text-align: center;
+  text-decoration: none;
+}
+
+.btn-employee-nav:hover {
+  background-color: #16a34a;
+}
 
 /* Footer styles */
 footer {
