@@ -4,10 +4,16 @@
 // Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
+
+// Génère le client Prisma, c’est-à-dire le code JavaScript pour interagir avec la base de données via Prisma
 generator client {
   provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
+
+// provider = "prisma-client-js" : indique que je veux générer le client Prisma en JavaScript.
+// output = "../generated/prisma" : précise où le client sera généré pour pouvoir ensuite l’importer avec require("../../generated/prisma")
+// Ce client est utilisé dans le contrôleur avec new PrismaClient() pour faire des requêtes comme prisma.employee.findUnique()
 
 datasource db {
   provider = "mysql"

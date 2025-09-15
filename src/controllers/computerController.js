@@ -48,11 +48,14 @@ exports.postAddComputer = async (req, res) => {
 
     if (Object.keys(errors).length > 0) {
       // gérer l'erreur (render ou json)
-      return res.render("pages/addComputer.twig", {
+      return res.render("pages/addOrUpdateComputer.twig", {
         error: errors,
         old: req.body,
       });
     }
+
+    console.log("Création ordinateur :", { macAddress, employeeId, bossId });
+
 
     await prisma.computer.create({
       data: {
